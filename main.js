@@ -42,12 +42,12 @@ function calculateMontlyPayment() {
 
   const lower = Math.pow(1 + interestRatePerMOnth, numberOfYear) - 1;
 
-  const EMI = (upper / lower).toFixed(2);
+  const EMI = (upper / lower).toFixed(3);
   return EMI;
 }
 
 function calculateTotalPayableAmount() {
-  return calculateMontlyPayment() * getPayableTimeInYear();
+  return (calculateMontlyPayment() * getPayableTimeInYear()).toFixed(3);
 }
 
 function calculateTotalInterest() {
@@ -56,13 +56,43 @@ function calculateTotalInterest() {
 
 // DISPLAYING THE RESULT
 function displayResult() {
-  interestAmountPayment.value = calculateTotalInterest();
-  monthlyPaymentOutput.value = calculateMontlyPayment();
-  totalAmountOutput.value = calculateTotalPayableAmount();
+  interestAmountPayment.textContent = calculateTotalInterest();
+  monthlyPaymentOutput.textContent = calculateMontlyPayment();
+  totalAmountOutput.textContent = calculateTotalPayableAmount();
 }
 
-// Event Listners
 inputFormSection.addEventListener("submit", (e) => {
   e.preventDefault();
   displayResult();
+
+  displayChart();
 });
+
+// Making a chart with the given data
+function displayChart() {
+  const ctx = document.getElementById("myChart");
+  const myChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: ["Total Interest", "Principal Loan"],
+      datasets: [
+        {
+          data: [calculateTotalInterest(), getLoanAmount()],
+          backgroundColor: [
+            "rgba(255, 99, 132, 0.9)",
+            "rgba(54, 162, 235, 0.9)",
+          ],
+          borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
+          borderWidth: 1,
+        },
+      ],
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true,
+        },
+      },
+    },
+  });
+}

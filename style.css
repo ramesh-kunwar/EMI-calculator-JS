@@ -21,8 +21,35 @@
     border-radius: .5rem;
 
 }
+.output-section span{
+    font-weight: bolder;
+}
 .loan-calculation-section{
     display: flex;
     justify-content: space-between;
+    /* height: 400px; */
     gap: 3rem;
+    /* flex-wrap: wrap; */
+}
+
+/* Chart */
+.chart-container{
+    margin-bottom: 2rem;
+    width: 50%;
+}
+
+
+@media (max-width:800px){
+    .loan-calculation-section{
+        display: block;
+        justify-content: space-between;
+        gap: 3rem;
+        /* flex-wrap: wrap; */
+    }
+    .input-section, .output-section{
+        background-color: rgba(172, 172, 172,.1);
+        width: 100%;
+      margin: 2rem auto;
+    
+    }
 }
