@@ -1,16 +1,16 @@
+// Input Selectors
 const loanAmountInput = document.querySelector("#loan-amount-input");
 const interestRateInput = document.querySelector("#interest-rate-input");
 const payableTimeInput = document.querySelector("#payable-time-input");
 
+// Button Selector
 const submitBtn = document.querySelector("button");
 
 // OUTPUT SECTION SELECTORS
 const interestAmountPayment = document.querySelector("#interest-amout-output");
-console.log(interestAmountPayment);
 const monthlyPaymentOutput = document.querySelector("#monthly-payable-output");
-console.log(monthlyPaymentOutput);
 const totalAmountOutput = document.querySelector("#total-amount-output");
-
+const principalAmountOutput = document.querySelector("#principal-amout-output");
 const inputFormSection = document.querySelector("#input-form-section");
 
 // Getting Data From The User
@@ -27,7 +27,7 @@ function getPayableTimeInYear() {
   return payableTime;
 }
 
-// CALCULATIONS
+// PERFORMING CALCULATIONS
 function calculateMontlyPayment() {
   // EMI = P x R x (1+R)^N / [(1+R)^N-1]
   const principalAmount = getLoanAmount();
@@ -59,40 +59,54 @@ function displayResult() {
   interestAmountPayment.textContent = calculateTotalInterest();
   monthlyPaymentOutput.textContent = calculateMontlyPayment();
   totalAmountOutput.textContent = calculateTotalPayableAmount();
+  principalAmountOutput.textContent = getLoanAmount();
 }
 
+// Event Listner
 inputFormSection.addEventListener("submit", (e) => {
   e.preventDefault();
   displayResult();
 
-  displayChart();
+  displayChart(
+    interestAmountPayment.textContent,
+    principalAmountOutput.textContent
+  );
 });
 
-// Making a chart with the given data
-function displayChart() {
-  const ctx = document.getElementById("myChart");
-  const myChart = new Chart(ctx, {
-    type: "doughnut",
-    data: {
-      labels: ["Total Interest", "Principal Loan"],
-      datasets: [
-        {
-          data: [calculateTotalInterest(), getLoanAmount()],
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.9)",
-            "rgba(54, 162, 235, 0.9)",
-          ],
-          borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
-          borderWidth: 1,
-        },
-      ],
+// displaying chart at beginning
+displayChart(0, 0);
+
+// CHART FUNCTION
+function displayChart(interest, principal) {
+  // Initialize the echarts instance based on the prepared dom
+  var myChart = echarts.init(document.getElementById("main"));
+
+  // Specify the configuration items and data for the chart
+  let option = {
+    title: {
+      left: "center",
+      top: "center",
     },
-    options: {
-      scales: {
-        y: {
-          beginAtZero: true,
-        },
+    series: [
+      {
+        type: "pie",
+        data: [
+          {
+            value: interest,
+            name: "Total Interest",
+          },
+          {
+            value: principal,
+            name: "Principal Amount",
+          },
+          // {
+          //   value: 1548,
+          //   name: 'C'
+          // }
+        ],
+        radius: ["40%", "70%"],
       },
-    },
-  });
+    ],
+  };
+  myChart.setOption(option);
 }
