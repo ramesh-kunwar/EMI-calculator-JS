@@ -1,0 +1,1 @@
+![Sample](./emi-calculator.png)
